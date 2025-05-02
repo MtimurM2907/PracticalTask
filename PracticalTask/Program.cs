@@ -2,27 +2,62 @@
 {
     static void Main(string[] args)
     {
+        string englishAlphabet = "abcdefghijklmnopqrstuvwxyz";
         string text = Console.ReadLine();
         string finalText = null;
-        if (text.Length % 2 == 0)
+        bool checkSymbol = false;
+        bool[] textBools = new bool[text.Length];
+        try
         {
-            for (int i = (text.Length / 2) - 1; i >= 0; i--)
+            for (int i = 0; i < text.Length; i++)
             {
-                finalText += text[i];
+                foreach (char j in englishAlphabet)
+                {
+                    if (text[i] == j)
+                    {
+                        checkSymbol = true;
+                    }
+                }
+                textBools[i] = checkSymbol;
+                checkSymbol = false;
             }
-            for (int i = text.Length - 1; i >= text.Length / 2; i--)
+            string inappropriateCharacters = null;
+            for (int i = 0; i < textBools.Length; i++)
             {
-                finalText += text[i];
+                if (textBools[i] == false)
+                {
+                    inappropriateCharacters += $" {text[i]} ";
+                }
             }
+            if (inappropriateCharacters != null)
+            {
+                throw new Exception($"Были введены не подходящие символы:{inappropriateCharacters}");
+            }
+
+            if (text.Length % 2 == 0)
+            {
+                for (int i = (text.Length / 2) - 1; i >= 0; i--)
+                {
+                    finalText += text[i];
+                }
+                for (int i = text.Length - 1; i >= text.Length / 2; i--)
+                {
+                    finalText += text[i];
+                }
+            }
+            else
+            {
+                for (int i = text.Length - 1; i >= 0; i--)
+                {
+                    finalText += text[i];
+                }
+                finalText += text;
+            }
+            Console.WriteLine(finalText);
         }
-        else
+        catch (Exception ex)
         {
-            for (int i = text.Length - 1; i >= 0; i--)
-            {
-                finalText += text[i];
-            }
-            finalText += text;
+            Console.WriteLine("Произошла ошибка: " + ex.Message);
         }
-        Console.WriteLine(finalText);
     }
 }
