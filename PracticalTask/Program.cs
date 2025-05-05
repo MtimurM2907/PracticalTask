@@ -1,4 +1,6 @@
-﻿class Program
+﻿using PracticalTask;
+
+class Program
 {
     public static string englishAlphabet = "abcdefghijklmnopqrstuvwxyz";
     public static string text;
@@ -10,6 +12,7 @@
         StringActions();
         RepeatCharacters();
         FindingLargestSubstring();
+        SortSelection();
     }
 
     //Проверка на корректный ввод
@@ -150,6 +153,27 @@
         for (int i = startIndex; i <= finishIndex; i++)
         {
             Console.Write($"{finalText[i]}");
+        }
+    }
+
+    //пользователь выбирает сортировку
+    public static void SortSelection()
+    {
+        Console.WriteLine("\nВыберите тип сортировки:\n1 - Быстрая сортировка (Quicksort)\n2 - Сортировка деревом (Tree sort)");
+        switch (Console.ReadLine())
+        {
+            case "1":
+                Sorting.Quicksort();
+                Console.WriteLine(finalText);
+                break;
+            case "2":
+                Sorting.TreeSort();
+                Console.WriteLine(finalText);
+                break;
+            default:
+                Console.WriteLine("Некорректный ввод");
+                SortSelection();
+                break;
         }
     }
 }
