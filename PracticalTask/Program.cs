@@ -1,10 +1,16 @@
 ﻿using PracticalTask;
+using System;
+using System.Reflection;
+using System.Text.Json;
 
 class Program
 {
     public static string englishAlphabet = "abcdefghijklmnopqrstuvwxyz";
     public static string text;
     public static string finalText;
+
+    public static readonly HttpClient client = new HttpClient();
+    public static readonly Random localRandom = new Random();
 
     static void Main(string[] args)
     {
@@ -13,6 +19,7 @@ class Program
         RepeatCharacters();
         FindingLargestSubstring();
         SortSelection();
+        RandomNumberGenerate();
     }
 
     //Проверка на корректный ввод
@@ -174,6 +181,31 @@ class Program
                 Console.WriteLine("Некорректный ввод");
                 SortSelection();
                 break;
+        }
+    }
+
+    //программа получает случайное число, которое меньше чем число символов в обработанной строке и удаляет символ в той позиции, номер которой вернёт случайный генератор.
+    public static async void RandomNumberGenerate()
+    {
+        int randomIndex = await GetRandomIndexAsync();
+        finalText.Remove(randomIndex, 1);
+        Console.WriteLine(finalText);
+    }
+
+    private static async Task<int> GetRandomIndexAsync()
+    {
+        try
+        {
+            var response = await client.GetAsync($"http://www.randomnumberapi.com/api/v1.0/random?min=0&max={finalText.Length - 1}&count=1");
+            response.EnsureSuccessStatusCode();
+            var json = await response.Content.ReadAsStringAsync();
+            var numbers = JsonSerializer.Deserialize<int[]>(json);
+
+            return numbers?.Length > 0 ? numbers[0] : localRandom.Next(0, finalText.Length);
+        }
+        catch
+        {
+            return localRandom.Next(0, finalText.Length);
         }
     }
 }
